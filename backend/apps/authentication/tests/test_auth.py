@@ -13,19 +13,27 @@ def api_client():
 @pytest.fixture
 def create_user(db):
     def _make(email="user@test.com", password="testpass123", role="analyst"):
-        return User.objects.create_user(email=email, username=email, password=password, role=role)
+        return User.objects.create_user(
+            email=email, username=email, password=password, role=role
+        )
+
     return _make
 
 
 @pytest.fixture
 def auth_client(api_client, create_user):
     user = create_user()
-    resp = api_client.post("/api/v1/auth/login/", {"email": user.email, "password": "testpass123"}, format="json")
+    resp = api_client.post(
+        "/api/v1/auth/login/",
+        {"email": user.email, "password": "testpass123"},
+        format="json",
+    )
     api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {resp.data['access']}")
     return api_client, user
 
 
 # ── Register ───────────────────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 def test_register_success(api_client):
@@ -68,10 +76,15 @@ def test_register_duplicate_email(api_client, create_user):
 
 # ── Login ──────────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 def test_login_success(api_client, create_user):
     create_user(email="login@test.com", password="mypassword")
-    resp = api_client.post("/api/v1/auth/login/", {"email": "login@test.com", "password": "mypassword"}, format="json")
+    resp = api_client.post(
+        "/api/v1/auth/login/",
+        {"email": "login@test.com", "password": "mypassword"},
+        format="json",
+    )
     assert resp.status_code == 200
     assert "access" in resp.data
     assert "refresh" in resp.data
@@ -80,11 +93,16 @@ def test_login_success(api_client, create_user):
 @pytest.mark.django_db
 def test_login_bad_credentials(api_client, create_user):
     create_user(email="bad@test.com", password="correctpass")
-    resp = api_client.post("/api/v1/auth/login/", {"email": "bad@test.com", "password": "wrongpass"}, format="json")
+    resp = api_client.post(
+        "/api/v1/auth/login/",
+        {"email": "bad@test.com", "password": "wrongpass"},
+        format="json",
+    )
     assert resp.status_code == 400
 
 
 # ── Me endpoint ────────────────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 def test_me_requires_auth(api_client):
@@ -102,10 +120,15 @@ def test_me_returns_user(auth_client):
 
 # ── Logout ─────────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 def test_logout_blacklists_token(api_client, create_user):
     create_user(email="logout@test.com", password="pass1234")
-    login_resp = api_client.post("/api/v1/auth/login/", {"email": "logout@test.com", "password": "pass1234"}, format="json")
+    login_resp = api_client.post(
+        "/api/v1/auth/login/",
+        {"email": "logout@test.com", "password": "pass1234"},
+        format="json",
+    )
     refresh = login_resp.data["refresh"]
     access = login_resp.data["access"]
 

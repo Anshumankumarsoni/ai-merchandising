@@ -28,7 +28,9 @@ class AIAnalysis(models.Model):
     analysis_type = models.CharField(max_length=50, choices=AnalysisType.choices)
     input_data = models.JSONField()
     output_data = models.JSONField(null=True, blank=True)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.PENDING
+    )
     error_message = models.TextField(blank=True)
     requested_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True

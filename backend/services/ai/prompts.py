@@ -3,7 +3,6 @@ Centralized prompt templates for all AI operations.
 Separating prompts from service code makes them easy to iterate on.
 """
 
-
 DESCRIPTION_SYSTEM = """You are an expert ecommerce copywriter specializing in SEO-optimized product listings.
 Generate compelling, accurate product content that drives conversions.
 Always respond with valid JSON only — no markdown, no preamble."""
@@ -34,7 +33,8 @@ Return JSON:
 }}"""
 
 
-REVIEW_ANALYSIS_SYSTEM = """You are a customer feedback analyst. Analyze product reviews and extract actionable insights.
+REVIEW_ANALYSIS_SYSTEM = """You are a customer feedback analyst.
+Analyze product reviews and extract actionable insights.
 Always respond with valid JSON only."""
 
 REVIEW_ANALYSIS_USER = """Analyze these product reviews:
@@ -53,7 +53,8 @@ Return JSON:
 }}"""
 
 
-LISTING_QUALITY_SYSTEM = """You are an ecommerce listing quality expert. Evaluate product listings for SEO and conversion optimization.
+LISTING_QUALITY_SYSTEM = """You are an ecommerce listing quality expert.
+Evaluate product listings for SEO and conversion optimization.
 Always respond with valid JSON only."""
 
 LISTING_QUALITY_USER = """Evaluate this product listing:

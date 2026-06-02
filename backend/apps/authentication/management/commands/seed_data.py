@@ -7,29 +7,40 @@ Usage:
     python manage.py seed_data --products 50
     python manage.py seed_data --clear
 """
+
 import random
 from decimal import Decimal
 
+from apps.catalog.models import Brand, Category, Product
+from apps.reviews.models import Review
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 
-from apps.catalog.models import Brand, Category, Product
-from apps.reviews.models import Review
-
 User = get_user_model()
 
 CATEGORIES = [
-    "Electronics", "Clothing & Apparel", "Home & Garden", "Sports & Outdoors",
-    "Books & Media", "Health & Beauty", "Toys & Games", "Automotive",
-    "Food & Grocery", "Office Supplies",
+    "Electronics",
+    "Clothing & Apparel",
+    "Home & Garden",
+    "Sports & Outdoors",
+    "Books & Media",
+    "Health & Beauty",
+    "Toys & Games",
+    "Automotive",
+    "Food & Grocery",
+    "Office Supplies",
 ]
 
 BRANDS = [
-    ("Sony", "https://sony.com"), ("Apple", "https://apple.com"),
-    ("Samsung", "https://samsung.com"), ("Nike", "https://nike.com"),
-    ("Adidas", "https://adidas.com"), ("Amazon Basics", "https://amazon.com"),
-    ("Anker", "https://anker.com"), ("Logitech", "https://logitech.com"),
+    ("Sony", "https://sony.com"),
+    ("Apple", "https://apple.com"),
+    ("Samsung", "https://samsung.com"),
+    ("Nike", "https://nike.com"),
+    ("Adidas", "https://adidas.com"),
+    ("Amazon Basics", "https://amazon.com"),
+    ("Anker", "https://anker.com"),
+    ("Logitech", "https://logitech.com"),
 ]
 
 SAMPLE_PRODUCTS = [
@@ -63,8 +74,12 @@ class Command(BaseCommand):
     help = "Seed the database with sample data for development"
 
     def add_arguments(self, parser):
-        parser.add_argument("--products", type=int, default=20, help="Number of products to create")
-        parser.add_argument("--clear", action="store_true", help="Clear existing data before seeding")
+        parser.add_argument(
+            "--products", type=int, default=20, help="Number of products to create"
+        )
+        parser.add_argument(
+            "--clear", action="store_true", help="Clear existing data before seeding"
+        )
 
     def handle(self, *args, **options):
         if options["clear"]:
@@ -137,7 +152,9 @@ class Command(BaseCommand):
     def _create_brands(self):
         brands = []
         for name, website in BRANDS:
-            brand, _ = Brand.objects.get_or_create(name=name, defaults={"website": website})
+            brand, _ = Brand.objects.get_or_create(
+                name=name, defaults={"website": website}
+            )
             brands.append(brand)
         return brands
 
@@ -181,7 +198,9 @@ class Command(BaseCommand):
                 brand=brand,
                 price=Decimal(str(round(random.uniform(5, 500), 2))),
                 inventory_count=random.randint(0, 300),
-                marketplace=random.choice(["amazon", "ebay", "shopify", "walmart", "etsy", "other"]),
+                marketplace=random.choice(
+                    ["amazon", "ebay", "shopify", "walmart", "etsy", "other"]
+                ),
                 created_by=manager,
             )
             products.append(p)

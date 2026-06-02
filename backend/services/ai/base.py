@@ -18,7 +18,13 @@ class BaseAIService(ABC):
         raw = self._call(system_prompt, user_prompt)
         try:
             # Strip markdown code fences if present
-            cleaned = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            cleaned = (
+                raw.strip()
+                .removeprefix("```json")
+                .removeprefix("```")
+                .removesuffix("```")
+                .strip()
+            )
             return json.loads(cleaned)
         except json.JSONDecodeError as exc:
             logger.error("AI returned non-JSON response: %s", raw[:500])

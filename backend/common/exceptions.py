@@ -13,10 +13,14 @@ def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
 
     if isinstance(exc, Http404):
-        return Response({"detail": "Resource not found."}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"detail": "Resource not found."}, status=status.HTTP_404_NOT_FOUND
+        )
 
     if isinstance(exc, PermissionDenied):
-        return Response({"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            {"detail": "Permission denied."}, status=status.HTTP_403_FORBIDDEN
+        )
 
     if isinstance(exc, ValidationError):
         return Response({"detail": exc.messages}, status=status.HTTP_400_BAD_REQUEST)

@@ -7,10 +7,24 @@ class AIAnalysisSerializer(serializers.ModelSerializer):
     class Meta:
         model = AIAnalysis
         fields = (
-            "id", "product", "analysis_type", "input_data",
-            "output_data", "status", "error_message", "created_at", "completed_at",
+            "id",
+            "product",
+            "analysis_type",
+            "input_data",
+            "output_data",
+            "status",
+            "error_message",
+            "created_at",
+            "completed_at",
         )
-        read_only_fields = ("id", "output_data", "status", "error_message", "created_at", "completed_at")
+        read_only_fields = (
+            "id",
+            "output_data",
+            "status",
+            "error_message",
+            "created_at",
+            "completed_at",
+        )
 
 
 class GenerateDescriptionSerializer(serializers.Serializer):
@@ -24,7 +38,9 @@ class ClassifyProductSerializer(serializers.Serializer):
 
 
 class AnalyzeReviewsSerializer(serializers.Serializer):
-    reviews = serializers.ListField(child=serializers.CharField(), min_length=1, max_length=100)
+    reviews = serializers.ListField(
+        child=serializers.CharField(), min_length=1, max_length=100
+    )
     product_id = serializers.UUIDField(required=False, allow_null=True)
 
 

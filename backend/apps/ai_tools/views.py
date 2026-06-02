@@ -6,13 +6,10 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from .models import AIAnalysis
-from .serializers import (
-    AIAnalysisSerializer,
-    AnalyzeListingQualitySerializer,
-    AnalyzeReviewsSerializer,
-    ClassifyProductSerializer,
-    GenerateDescriptionSerializer,
-)
+from .serializers import (AIAnalysisSerializer,
+                          AnalyzeListingQualitySerializer,
+                          AnalyzeReviewsSerializer, ClassifyProductSerializer,
+                          GenerateDescriptionSerializer)
 
 
 def _create_pending(analysis_type, input_data, product_id, user) -> AIAnalysis:
@@ -28,7 +25,11 @@ def _create_pending(analysis_type, input_data, product_id, user) -> AIAnalysis:
 class GenerateDescriptionView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(request=GenerateDescriptionSerializer, responses={202: AIAnalysisSerializer}, tags=["AI Tools"])
+    @extend_schema(
+        request=GenerateDescriptionSerializer,
+        responses={202: AIAnalysisSerializer},
+        tags=["AI Tools"],
+    )
     def post(self, request):
         from celery_tasks.tasks.description import generate_description_async
 
@@ -41,13 +42,19 @@ class GenerateDescriptionView(APIView):
             request.user,
         )
         generate_description_async.delay(str(analysis.id))
-        return Response(AIAnalysisSerializer(analysis).data, status=status.HTTP_202_ACCEPTED)
+        return Response(
+            AIAnalysisSerializer(analysis).data, status=status.HTTP_202_ACCEPTED
+        )
 
 
 class ClassifyProductView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(request=ClassifyProductSerializer, responses={202: AIAnalysisSerializer}, tags=["AI Tools"])
+    @extend_schema(
+        request=ClassifyProductSerializer,
+        responses={202: AIAnalysisSerializer},
+        tags=["AI Tools"],
+    )
     def post(self, request):
         from celery_tasks.tasks.classification import classify_product_async
 
@@ -60,13 +67,19 @@ class ClassifyProductView(APIView):
             request.user,
         )
         classify_product_async.delay(str(analysis.id))
-        return Response(AIAnalysisSerializer(analysis).data, status=status.HTTP_202_ACCEPTED)
+        return Response(
+            AIAnalysisSerializer(analysis).data, status=status.HTTP_202_ACCEPTED
+        )
 
 
 class AnalyzeReviewsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(request=AnalyzeReviewsSerializer, responses={202: AIAnalysisSerializer}, tags=["AI Tools"])
+    @extend_schema(
+        request=AnalyzeReviewsSerializer,
+        responses={202: AIAnalysisSerializer},
+        tags=["AI Tools"],
+    )
     def post(self, request):
         from celery_tasks.tasks.review_analysis import analyze_reviews_async
 
@@ -79,13 +92,19 @@ class AnalyzeReviewsView(APIView):
             request.user,
         )
         analyze_reviews_async.delay(str(analysis.id))
-        return Response(AIAnalysisSerializer(analysis).data, status=status.HTTP_202_ACCEPTED)
+        return Response(
+            AIAnalysisSerializer(analysis).data, status=status.HTTP_202_ACCEPTED
+        )
 
 
 class AnalyzeListingQualityView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(request=AnalyzeListingQualitySerializer, responses={202: AIAnalysisSerializer}, tags=["AI Tools"])
+    @extend_schema(
+        request=AnalyzeListingQualitySerializer,
+        responses={202: AIAnalysisSerializer},
+        tags=["AI Tools"],
+    )
     def post(self, request):
         # Listing quality runs synchronously (fast enough, no Celery task needed)
         from apps.ai_tools.services import AIToolsService
@@ -107,4 +126,6 @@ class AIAnalysisHistoryViewSet(ReadOnlyModelViewSet):
     ordering = ["-created_at"]
 
     def get_queryset(self):
-        return AIAnalysis.objects.filter(requested_by=self.request.user).order_by("-created_at")
+        return AIAnalysis.objects.filter(requested_by=self.request.user).order_by(
+            "-created_at"
+        )

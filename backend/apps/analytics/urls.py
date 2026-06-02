@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import AIUsageAnalyticsView, DashboardAnalyticsView, InventoryDashboardView
+from .views import (AIUsageAnalyticsView, DashboardAnalyticsView,
+                    InventoryDashboardView)
 
 urlpatterns = [
     path("dashboard/", DashboardAnalyticsView.as_view(), name="analytics-dashboard"),

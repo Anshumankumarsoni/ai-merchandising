@@ -2,7 +2,8 @@ import logging
 
 import google.generativeai as genai
 from django.conf import settings
-from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
+                      wait_exponential)
 
 from .base import BaseAIService
 
@@ -34,6 +35,7 @@ class GeminiService(BaseAIService):
 
     def classify_product(self, product_name: str) -> dict:
         from .prompts import CLASSIFICATION_SYSTEM, CLASSIFICATION_USER
+
         return self.call_structured(
             CLASSIFICATION_SYSTEM,
             CLASSIFICATION_USER.format(product_name=product_name),

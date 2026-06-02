@@ -1,12 +1,11 @@
 import json
-import pytest
 from unittest.mock import MagicMock, patch
 
+import pytest
 from services.ai.base import BaseAIService
-from services.ai.prompts import DESCRIPTION_SYSTEM
-
 
 # ── Base service JSON parsing ──────────────────────────────────────────────────
+
 
 class ConcreteAIService(BaseAIService):
     def __init__(self, raw_response: str):
@@ -36,6 +35,7 @@ def test_call_structured_raises_on_invalid_json():
 
 # ── OpenAI service ─────────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 @patch("services.ai.openai_service.OpenAI")
 def test_generate_description(mock_openai, settings):
@@ -45,12 +45,14 @@ def test_generate_description(mock_openai, settings):
     settings.AI_MAX_RETRIES = 1
 
     mock_choice = MagicMock()
-    mock_choice.message.content = json.dumps({
-        "seo_title": "Test Title",
-        "description": "Test description",
-        "features": ["Feature 1"],
-        "keywords": ["keyword1"],
-    })
+    mock_choice.message.content = json.dumps(
+        {
+            "seo_title": "Test Title",
+            "description": "Test description",
+            "features": ["Feature 1"],
+            "keywords": ["keyword1"],
+        }
+    )
     mock_usage = MagicMock()
     mock_usage.total_tokens = 100
     mock_response = MagicMock()
@@ -59,6 +61,7 @@ def test_generate_description(mock_openai, settings):
     mock_openai.return_value.chat.completions.create.return_value = mock_response
 
     from services.ai.openai_service import OpenAIService
+
     svc = OpenAIService()
     result = svc.generate_description("Test Product")
 
@@ -69,6 +72,7 @@ def test_generate_description(mock_openai, settings):
 
 # ── Gemini service ─────────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 @patch("services.ai.gemini_service.genai")
 def test_classify_product(mock_genai, settings):
@@ -77,15 +81,20 @@ def test_classify_product(mock_genai, settings):
     settings.AI_MAX_RETRIES = 1
 
     mock_response = MagicMock()
-    mock_response.text = json.dumps({
-        "category": "Electronics",
-        "subcategory": "Audio",
-        "confidence": 0.95,
-        "reasoning": "This is a headphone product.",
-    })
-    mock_genai.GenerativeModel.return_value.generate_content.return_value = mock_response
+    mock_response.text = json.dumps(
+        {
+            "category": "Electronics",
+            "subcategory": "Audio",
+            "confidence": 0.95,
+            "reasoning": "This is a headphone product.",
+        }
+    )
+    mock_genai.GenerativeModel.return_value.generate_content.return_value = (
+        mock_response
+    )
 
     from services.ai.gemini_service import GeminiService
+
     svc = GeminiService()
     result = svc.classify_product("Sony WH-1000XM5 Headphones")
 

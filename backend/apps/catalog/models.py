@@ -9,7 +9,11 @@ class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     parent = models.ForeignKey(
-        "self", on_delete=models.SET_NULL, null=True, blank=True, related_name="children"
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="children",
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -49,14 +53,20 @@ class Product(models.Model):
     name = models.CharField(max_length=500)
     description = models.TextField(blank=True)
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="products"
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="products",
     )
     brand = models.ForeignKey(
         Brand, on_delete=models.SET_NULL, null=True, blank=True, related_name="products"
     )
     price = models.DecimalField(max_digits=12, decimal_places=2)
     inventory_count = models.IntegerField(default=0)
-    marketplace = models.CharField(max_length=50, choices=Marketplace.choices, default=Marketplace.OTHER)
+    marketplace = models.CharField(
+        max_length=50, choices=Marketplace.choices, default=Marketplace.OTHER
+    )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -86,7 +96,9 @@ class Product(models.Model):
 
 class InventoryLog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="inventory_logs")
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="inventory_logs"
+    )
     previous_count = models.IntegerField()
     new_count = models.IntegerField()
     change_reason = models.CharField(max_length=300, blank=True)

@@ -1,8 +1,9 @@
 import json
-import pytest
 from unittest.mock import MagicMock, patch
-from tests.factories import AIAnalysisFactory, ProductFactory
+
+import pytest
 from apps.ai_tools.models import AIAnalysis
+from tests.factories import AIAnalysisFactory
 
 
 @pytest.mark.django_db
@@ -14,12 +15,14 @@ def test_generate_description_task_completes(mock_openai, settings):
     settings.AI_MAX_RETRIES = 1
 
     mock_choice = MagicMock()
-    mock_choice.message.content = json.dumps({
-        "seo_title": "Test SEO Title",
-        "description": "A great product",
-        "features": ["Feature 1", "Feature 2"],
-        "keywords": ["test", "product"],
-    })
+    mock_choice.message.content = json.dumps(
+        {
+            "seo_title": "Test SEO Title",
+            "description": "A great product",
+            "features": ["Feature 1", "Feature 2"],
+            "keywords": ["test", "product"],
+        }
+    )
     mock_usage = MagicMock()
     mock_usage.total_tokens = 50
     mock_response = MagicMock()
@@ -34,6 +37,7 @@ def test_generate_description_task_completes(mock_openai, settings):
     )
 
     from celery_tasks.tasks.description import generate_description_async
+
     generate_description_async(str(analysis.id))
 
     analysis.refresh_from_db()
@@ -50,13 +54,17 @@ def test_classify_product_task_completes(mock_genai, settings):
     settings.AI_MAX_RETRIES = 1
 
     mock_response = MagicMock()
-    mock_response.text = json.dumps({
-        "category": "Electronics",
-        "subcategory": "Audio",
-        "confidence": 0.95,
-        "reasoning": "This is headphones.",
-    })
-    mock_genai.GenerativeModel.return_value.generate_content.return_value = mock_response
+    mock_response.text = json.dumps(
+        {
+            "category": "Electronics",
+            "subcategory": "Audio",
+            "confidence": 0.95,
+            "reasoning": "This is headphones.",
+        }
+    )
+    mock_genai.GenerativeModel.return_value.generate_content.return_value = (
+        mock_response
+    )
 
     analysis = AIAnalysisFactory(
         analysis_type=AIAnalysis.AnalysisType.CLASSIFICATION,
@@ -65,6 +73,7 @@ def test_classify_product_task_completes(mock_genai, settings):
     )
 
     from celery_tasks.tasks.classification import classify_product_async
+
     classify_product_async(str(analysis.id))
 
     analysis.refresh_from_db()
@@ -80,10 +89,14 @@ def test_task_marks_failed_on_error():
         status=AIAnalysis.Status.PENDING,
     )
 
-    with patch("services.ai.openai_service.OpenAIService.generate_description") as mock_gen:
+    with patch(
+        "services.ai.openai_service.OpenAIService.generate_description"
+    ) as mock_gen:
         mock_gen.side_effect = Exception("API timeout")
         with pytest.raises(Exception):
-            from celery_tasks.tasks.description import generate_description_async
+            from celery_tasks.tasks.description import \
+                generate_description_async
+
             generate_description_async(str(analysis.id))
 
     analysis.refresh_from_db()

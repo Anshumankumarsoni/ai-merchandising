@@ -8,7 +8,9 @@ logger = logging.getLogger(__name__)
 
 class AIToolsService:
     @staticmethod
-    def _create_analysis(analysis_type: str, input_data: dict, product_id, user) -> AIAnalysis:
+    def _create_analysis(
+        analysis_type: str, input_data: dict, product_id, user
+    ) -> AIAnalysis:
         return AIAnalysis.objects.create(
             analysis_type=analysis_type,
             input_data=input_data,
@@ -35,6 +37,7 @@ class AIToolsService:
     @classmethod
     def generate_description(cls, product_title: str, product_id, user) -> AIAnalysis:
         from services.ai.openai_service import OpenAIService
+
         analysis = cls._create_analysis(
             AIAnalysis.AnalysisType.DESCRIPTION,
             {"product_title": product_title},
@@ -51,6 +54,7 @@ class AIToolsService:
     @classmethod
     def classify_product(cls, product_name: str, product_id, user) -> AIAnalysis:
         from services.ai.gemini_service import GeminiService
+
         analysis = cls._create_analysis(
             AIAnalysis.AnalysisType.CLASSIFICATION,
             {"product_name": product_name},
@@ -67,6 +71,7 @@ class AIToolsService:
     @classmethod
     def analyze_reviews(cls, reviews: list, product_id, user) -> AIAnalysis:
         from services.ai.openai_service import OpenAIService
+
         analysis = cls._create_analysis(
             AIAnalysis.AnalysisType.REVIEW,
             {"reviews": reviews, "review_count": len(reviews)},
@@ -81,8 +86,11 @@ class AIToolsService:
             return cls._fail_analysis(analysis, str(exc))
 
     @classmethod
-    def analyze_listing_quality(cls, title: str, description: str, product_id, user) -> AIAnalysis:
+    def analyze_listing_quality(
+        cls, title: str, description: str, product_id, user
+    ) -> AIAnalysis:
         from services.ai.openai_service import OpenAIService
+
         analysis = cls._create_analysis(
             AIAnalysis.AnalysisType.LISTING_QUALITY,
             {"title": title, "description": description},

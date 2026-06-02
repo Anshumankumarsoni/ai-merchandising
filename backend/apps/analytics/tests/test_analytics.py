@@ -1,6 +1,6 @@
 import pytest
-from tests.factories import AIAnalysisFactory, CategoryFactory, ProductFactory
 from apps.ai_tools.models import AIAnalysis
+from tests.factories import AIAnalysisFactory, CategoryFactory, ProductFactory
 
 
 @pytest.mark.django_db

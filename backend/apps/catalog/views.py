@@ -1,23 +1,17 @@
+from common.permissions import IsManagerOrAbove
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from common.permissions import IsManagerOrAbove
-
 from .filters import ProductFilter
-from .models import Brand, Category, Product
-from .repositories import BrandRepository, CategoryRepository, InventoryLogRepository, ProductRepository
-from .serializers import (
-    BrandSerializer,
-    CategorySerializer,
-    InventoryLogSerializer,
-    InventoryUpdateSerializer,
-    ProductDetailSerializer,
-    ProductListSerializer,
-)
-from .services import BrandService, CategoryService, ProductService
+from .models import Brand, Category
+from .repositories import InventoryLogRepository, ProductRepository
+from .serializers import (BrandSerializer, CategorySerializer,
+                          InventoryLogSerializer, InventoryUpdateSerializer,
+                          ProductDetailSerializer, ProductListSerializer)
+from .services import CategoryService, ProductService
 
 
 @extend_schema_view(
@@ -52,7 +46,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer = ProductDetailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         product = ProductService.create_product(serializer.validated_data, request.user)
-        return Response(ProductDetailSerializer(product).data, status=status.HTTP_201_CREATED)
+        return Response(
+            ProductDetailSerializer(product).data, status=status.HTTP_201_CREATED
+        )
 
     def update(self, request, *args, **kwargs):
         product = self.get_object()

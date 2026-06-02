@@ -1,12 +1,9 @@
 import pytest
-from tests.factories import (
-    AIAnalysisFactory,
-    CategoryFactory,
-    LowStockProductFactory,
-    ProductFactory,
-)
 from apps.ai_tools.models import AIAnalysis
-from apps.analytics.services import AIUsageService, DashboardService, InventoryService
+from apps.analytics.services import (AIUsageService, DashboardService,
+                                     InventoryService)
+from tests.factories import (AIAnalysisFactory, CategoryFactory,
+                             LowStockProductFactory, ProductFactory)
 
 
 @pytest.mark.django_db

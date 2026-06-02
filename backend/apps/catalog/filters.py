@@ -12,8 +12,12 @@ class ProductFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
     max_price = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
     low_stock = django_filters.BooleanFilter(method="filter_low_stock")
-    min_inventory = django_filters.NumberFilter(field_name="inventory_count", lookup_expr="gte")
-    max_inventory = django_filters.NumberFilter(field_name="inventory_count", lookup_expr="lte")
+    min_inventory = django_filters.NumberFilter(
+        field_name="inventory_count", lookup_expr="gte"
+    )
+    max_inventory = django_filters.NumberFilter(
+        field_name="inventory_count", lookup_expr="lte"
+    )
 
     def filter_low_stock(self, queryset, name, value):
         if value:
@@ -22,4 +26,12 @@ class ProductFilter(django_filters.FilterSet):
 
     class Meta:
         model = Product
-        fields = ["name", "sku", "category", "brand", "marketplace", "min_price", "max_price"]
+        fields = [
+            "name",
+            "sku",
+            "category",
+            "brand",
+            "marketplace",
+            "min_price",
+            "max_price",
+        ]

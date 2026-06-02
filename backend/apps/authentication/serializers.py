@@ -1,6 +1,5 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
 
@@ -11,7 +10,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("email", "username", "first_name", "last_name", "role", "password", "password_confirm")
+        fields = (
+            "email",
+            "username",
+            "first_name",
+            "last_name",
+            "role",
+            "password",
+            "password_confirm",
+        )
 
     def validate(self, attrs):
         if attrs["password"] != attrs.pop("password_confirm"):
@@ -41,7 +48,16 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "email", "username", "first_name", "last_name", "full_name", "role", "created_at")
+        fields = (
+            "id",
+            "email",
+            "username",
+            "first_name",
+            "last_name",
+            "full_name",
+            "role",
+            "created_at",
+        )
         read_only_fields = ("id", "created_at")
 
 

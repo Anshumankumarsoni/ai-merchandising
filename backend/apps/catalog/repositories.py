@@ -59,7 +59,9 @@ class BrandRepository:
 
 class InventoryLogRepository:
     @staticmethod
-    def create(product: Product, previous_count: int, new_count: int, reason: str, user) -> InventoryLog:
+    def create(
+        product: Product, previous_count: int, new_count: int, reason: str, user
+    ) -> InventoryLog:
         return InventoryLog.objects.create(
             product=product,
             previous_count=previous_count,

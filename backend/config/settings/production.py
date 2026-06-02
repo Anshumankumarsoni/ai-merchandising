@@ -1,11 +1,13 @@
-from .base import *  # noqa: F401, F403
-
 import sentry_sdk
 from decouple import config
 
+from .base import *  # noqa: F401, F403
+
 DEBUG = False
 
-CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=lambda v: [s.strip() for s in v.split(",")])
+CORS_ALLOWED_ORIGINS = config(
+    "CORS_ALLOWED_ORIGINS", default="", cast=lambda v: [s.strip() for s in v.split(",")]
+)
 
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")  # noqa: F405
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

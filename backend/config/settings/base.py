@@ -1,14 +1,18 @@
 """
 Base settings shared across all environments.
 """
-import os
+
+from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
 from decouple import Csv, config
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = config("DJANGO_SECRET_KEY", default="django-insecure-dummy-key-for-collectstatic")
+SECRET_KEY = config(
+    "DJANGO_SECRET_KEY", default="django-insecure-dummy-key-for-collectstatic"
+)
 DEBUG = config("DJANGO_DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", default="localhost", cast=Csv())
 
@@ -84,7 +88,9 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -121,8 +127,6 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "common.exceptions.custom_exception_handler",
 }
 
-# ── JWT ─────────────────────────────────────────────────────────────────────────
-from datetime import timedelta
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(
@@ -138,7 +142,9 @@ SIMPLE_JWT = {
 
 # ── Celery ──────────────────────────────────────────────────────────────────────
 CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="redis://localhost:6379/1")
-CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://localhost:6379/2")
+CELERY_RESULT_BACKEND = config(
+    "CELERY_RESULT_BACKEND", default="redis://localhost:6379/2"
+)
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
@@ -193,7 +199,6 @@ LOGGING = {
 }
 
 # ── Celery Beat schedule ─────────────────────────────────────────────────────
-from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
     "cleanup-failed-analyses-daily": {

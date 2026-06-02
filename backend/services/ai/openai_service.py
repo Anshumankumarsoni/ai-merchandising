@@ -2,7 +2,8 @@ import logging
 
 from django.conf import settings
 from openai import OpenAI
-from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
+                      wait_exponential)
 
 from .base import BaseAIService
 
@@ -40,6 +41,7 @@ class OpenAIService(BaseAIService):
 
     def generate_description(self, product_title: str) -> dict:
         from .prompts import DESCRIPTION_SYSTEM, DESCRIPTION_USER
+
         return self.call_structured(
             DESCRIPTION_SYSTEM,
             DESCRIPTION_USER.format(product_title=product_title),
@@ -47,6 +49,7 @@ class OpenAIService(BaseAIService):
 
     def analyze_reviews(self, reviews: list[str]) -> dict:
         from .prompts import REVIEW_ANALYSIS_SYSTEM, REVIEW_ANALYSIS_USER
+
         reviews_text = "\n---\n".join(reviews)
         return self.call_structured(
             REVIEW_ANALYSIS_SYSTEM,
@@ -55,6 +58,7 @@ class OpenAIService(BaseAIService):
 
     def analyze_listing_quality(self, title: str, description: str) -> dict:
         from .prompts import LISTING_QUALITY_SYSTEM, LISTING_QUALITY_USER
+
         return self.call_structured(
             LISTING_QUALITY_SYSTEM,
             LISTING_QUALITY_USER.format(title=title, description=description),

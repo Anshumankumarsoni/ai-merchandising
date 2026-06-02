@@ -3,7 +3,7 @@ import logging
 from django.utils.text import slugify
 
 from .models import Brand, Category, Product
-from .repositories import BrandRepository, CategoryRepository, InventoryLogRepository, ProductRepository
+from .repositories import InventoryLogRepository, ProductRepository
 
 logger = logging.getLogger(__name__)
 
@@ -25,14 +25,19 @@ class ProductService:
         logger.info("Product deleted: %s", product.sku)
 
     @staticmethod
-    def update_inventory(product: Product, new_count: int, reason: str, user) -> Product:
+    def update_inventory(
+        product: Product, new_count: int, reason: str, user
+    ) -> Product:
         previous = product.inventory_count
         InventoryLogRepository.create(product, previous, new_count, reason, user)
         product.inventory_count = new_count
         product.save(update_fields=["inventory_count"])
         logger.info(
             "Inventory updated for %s: %d → %d by %s",
-            product.sku, previous, new_count, user.email,
+            product.sku,
+            previous,
+            new_count,
+            user.email,
         )
         return product
 

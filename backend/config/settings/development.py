@@ -6,6 +6,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 try:
     import django_extensions  # noqa: F401
+
     INSTALLED_APPS += ["django_extensions"]  # noqa: F405
 except ImportError:
     pass

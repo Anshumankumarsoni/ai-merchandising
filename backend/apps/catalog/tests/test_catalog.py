@@ -1,8 +1,7 @@
 import pytest
+from apps.catalog.models import Brand, Category, Product
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
-
-from apps.catalog.models import Brand, Category, Product
 
 User = get_user_model()
 
@@ -14,24 +13,39 @@ def api_client():
 
 @pytest.fixture
 def manager_user(db):
-    return User.objects.create_user(email="mgr@test.com", username="mgr", password="pass1234", role="manager")
+    return User.objects.create_user(
+        email="mgr@test.com", username="mgr", password="pass1234", role="manager"
+    )
 
 
 @pytest.fixture
 def analyst_user(db):
-    return User.objects.create_user(email="analyst@test.com", username="analyst", password="pass1234", role="analyst")
+    return User.objects.create_user(
+        email="analyst@test.com",
+        username="analyst",
+        password="pass1234",
+        role="analyst",
+    )
 
 
 @pytest.fixture
 def manager_client(api_client, manager_user):
-    resp = api_client.post("/api/v1/auth/login/", {"email": "mgr@test.com", "password": "pass1234"}, format="json")
+    resp = api_client.post(
+        "/api/v1/auth/login/",
+        {"email": "mgr@test.com", "password": "pass1234"},
+        format="json",
+    )
     api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {resp.data['access']}")
     return api_client
 
 
 @pytest.fixture
 def analyst_client(api_client, analyst_user):
-    resp = api_client.post("/api/v1/auth/login/", {"email": "analyst@test.com", "password": "pass1234"}, format="json")
+    resp = api_client.post(
+        "/api/v1/auth/login/",
+        {"email": "analyst@test.com", "password": "pass1234"},
+        format="json",
+    )
     api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {resp.data['access']}")
     return api_client
 
@@ -61,6 +75,7 @@ def product(db, category, brand, manager_user):
 
 
 # ── Product CRUD ───────────────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 def test_list_products_authenticated(analyst_client, product):
@@ -93,7 +108,13 @@ def test_create_product_as_manager(manager_client, category, brand):
 
 @pytest.mark.django_db
 def test_create_product_as_analyst_forbidden(analyst_client, category):
-    payload = {"sku": "BAD-001", "name": "Bad Product", "price": "10.00", "inventory_count": 1, "marketplace": "other"}
+    payload = {
+        "sku": "BAD-001",
+        "name": "Bad Product",
+        "price": "10.00",
+        "inventory_count": 1,
+        "marketplace": "other",
+    }
     resp = analyst_client.post("/api/v1/catalog/products/", payload, format="json")
     assert resp.status_code == 403
 
@@ -107,6 +128,7 @@ def test_delete_product_as_manager(manager_client, product):
 
 # ── Filtering ──────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 def test_filter_by_marketplace(analyst_client, product):
     resp = analyst_client.get("/api/v1/catalog/products/?marketplace=amazon")
@@ -116,7 +138,15 @@ def test_filter_by_marketplace(analyst_client, product):
 
 @pytest.mark.django_db
 def test_filter_low_stock(analyst_client, db, manager_user, category):
-    Product.objects.create(sku="LOW-001", name="Low Stock Item", price="5.00", inventory_count=2, marketplace="other", created_by=manager_user, category=category)
+    Product.objects.create(
+        sku="LOW-001",
+        name="Low Stock Item",
+        price="5.00",
+        inventory_count=2,
+        marketplace="other",
+        created_by=manager_user,
+        category=category,
+    )
     resp = analyst_client.get("/api/v1/catalog/products/?low_stock=true")
     assert resp.status_code == 200
     assert all(p["inventory_count"] < 10 for p in resp.data["results"])
@@ -130,6 +160,7 @@ def test_search_by_name(analyst_client, product):
 
 
 # ── Inventory update ───────────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 def test_update_inventory(manager_client, product):
@@ -150,7 +181,9 @@ def test_inventory_history_recorded(manager_client, product):
         {"new_count": 25, "change_reason": "Test"},
         format="json",
     )
-    resp = manager_client.get(f"/api/v1/catalog/products/{product.id}/inventory_history/")
+    resp = manager_client.get(
+        f"/api/v1/catalog/products/{product.id}/inventory_history/"
+    )
     assert resp.status_code == 200
     assert len(resp.data) >= 1
     assert resp.data[0]["new_count"] == 25

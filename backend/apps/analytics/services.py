@@ -2,10 +2,10 @@
 Analytics service layer.
 All aggregation queries live here so views stay thin and logic is testable.
 """
-from django.db.models import Avg, Count, Q, Sum
 
 from apps.ai_tools.models import AIAnalysis
 from apps.catalog.models import Category, Product
+from django.db.models import Avg, Count, Q, Sum
 
 
 class DashboardService:
@@ -24,7 +24,9 @@ class DashboardService:
             "ai_generated_analyses": AIAnalysis.objects.filter(
                 status=AIAnalysis.Status.COMPLETED
             ).count(),
-            "total_inventory_value": float((agg["avg_price"] or 0) * (agg["total"] or 0)),
+            "total_inventory_value": float(
+                (agg["avg_price"] or 0) * (agg["total"] or 0)
+            ),
             "average_product_price": float(agg["avg_price"] or 0),
         }
 

@@ -1,7 +1,6 @@
-import pytest
 from unittest.mock import patch
-from tests.factories import ProductFactory
-from apps.ai_tools.models import AIAnalysis
+
+import pytest
 
 
 @pytest.mark.django_db
@@ -37,7 +36,13 @@ def test_classify_product_returns_202(mock_task, analyst_client):
 def test_analyze_reviews_returns_202(mock_task, analyst_client):
     resp = analyst_client.post(
         "/api/v1/ai/analyze-reviews/",
-        {"reviews": ["Great product!", "Battery died quickly.", "Good value for money."]},
+        {
+            "reviews": [
+                "Great product!",
+                "Battery died quickly.",
+                "Good value for money.",
+            ]
+        },
         format="json",
     )
     assert resp.status_code == 202

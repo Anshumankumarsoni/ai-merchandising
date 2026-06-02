@@ -1,8 +1,7 @@
 import pytest
-from django.core.management import call_command
+from apps.catalog.models import Brand, Category, Product
 from django.contrib.auth import get_user_model
-from apps.catalog.models import Category, Brand, Product
-from apps.reviews.models import Review
+from django.core.management import call_command
 
 User = get_user_model()
 

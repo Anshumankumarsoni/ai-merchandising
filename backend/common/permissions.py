@@ -8,12 +8,19 @@ class IsAdmin(BasePermission):
 
 class IsManagerOrAbove(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role in ("admin", "manager")
+        return request.user.is_authenticated and request.user.role in (
+            "admin",
+            "manager",
+        )
 
 
 class IsAnalystOrAbove(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role in ("admin", "manager", "analyst")
+        return request.user.is_authenticated and request.user.role in (
+            "admin",
+            "manager",
+            "analyst",
+        )
 
 
 class IsOwnerOrAdmin(BasePermission):
