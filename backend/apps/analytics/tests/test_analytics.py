@@ -1,4 +1,5 @@
 import pytest
+
 from apps.ai_tools.models import AIAnalysis
 from tests.factories import AIAnalysisFactory, CategoryFactory, ProductFactory
 

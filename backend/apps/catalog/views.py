@@ -1,16 +1,22 @@
-from common.permissions import IsManagerOrAbove
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from common.permissions import IsManagerOrAbove
+
 from .filters import ProductFilter
 from .models import Brand, Category
 from .repositories import InventoryLogRepository, ProductRepository
-from .serializers import (BrandSerializer, CategorySerializer,
-                          InventoryLogSerializer, InventoryUpdateSerializer,
-                          ProductDetailSerializer, ProductListSerializer)
+from .serializers import (
+    BrandSerializer,
+    CategorySerializer,
+    InventoryLogSerializer,
+    InventoryUpdateSerializer,
+    ProductDetailSerializer,
+    ProductListSerializer,
+)
 from .services import CategoryService, ProductService
 
 

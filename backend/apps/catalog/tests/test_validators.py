@@ -1,7 +1,11 @@
 import pytest
-from common.validators import (validate_non_negative_inventory,
-                               validate_positive_price, validate_sku)
 from rest_framework import serializers
+
+from common.validators import (
+    validate_non_negative_inventory,
+    validate_positive_price,
+    validate_sku,
+)
 
 
 class TestValidateSKU:

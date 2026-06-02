@@ -2,6 +2,7 @@ import json
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from apps.ai_tools.models import AIAnalysis
 from tests.factories import AIAnalysisFactory
 
@@ -94,8 +95,7 @@ def test_task_marks_failed_on_error():
     ) as mock_gen:
         mock_gen.side_effect = Exception("API timeout")
         with pytest.raises(Exception):
-            from celery_tasks.tasks.description import \
-                generate_description_async
+            from celery_tasks.tasks.description import generate_description_async
 
             generate_description_async(str(analysis.id))
 

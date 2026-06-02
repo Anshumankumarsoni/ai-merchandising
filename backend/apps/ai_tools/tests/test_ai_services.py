@@ -2,6 +2,7 @@ import json
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from services.ai.base import BaseAIService
 
 # ── Base service JSON parsing ──────────────────────────────────────────────────

@@ -6,10 +6,13 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from .models import AIAnalysis
-from .serializers import (AIAnalysisSerializer,
-                          AnalyzeListingQualitySerializer,
-                          AnalyzeReviewsSerializer, ClassifyProductSerializer,
-                          GenerateDescriptionSerializer)
+from .serializers import (
+    AIAnalysisSerializer,
+    AnalyzeListingQualitySerializer,
+    AnalyzeReviewsSerializer,
+    ClassifyProductSerializer,
+    GenerateDescriptionSerializer,
+)
 
 
 def _create_pending(analysis_type, input_data, product_id, user) -> AIAnalysis:

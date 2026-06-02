@@ -11,11 +11,12 @@ Usage:
 import random
 from decimal import Decimal
 
-from apps.catalog.models import Brand, Category, Product
-from apps.reviews.models import Review
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
+
+from apps.catalog.models import Brand, Category, Product
+from apps.reviews.models import Review
 
 User = get_user_model()
 

@@ -1,9 +1,13 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (AIAnalysisHistoryViewSet, AnalyzeListingQualityView,
-                    AnalyzeReviewsView, ClassifyProductView,
-                    GenerateDescriptionView)
+from .views import (
+    AIAnalysisHistoryViewSet,
+    AnalyzeListingQualityView,
+    AnalyzeReviewsView,
+    ClassifyProductView,
+    GenerateDescriptionView,
+)
 
 router = DefaultRouter()
 router.register("history", AIAnalysisHistoryViewSet, basename="ai-history")

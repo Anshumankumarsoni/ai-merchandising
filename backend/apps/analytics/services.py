@@ -3,9 +3,10 @@ Analytics service layer.
 All aggregation queries live here so views stay thin and logic is testable.
 """
 
+from django.db.models import Avg, Count, Q, Sum
+
 from apps.ai_tools.models import AIAnalysis
 from apps.catalog.models import Category, Product
-from django.db.models import Avg, Count, Q, Sum
 
 
 class DashboardService:
