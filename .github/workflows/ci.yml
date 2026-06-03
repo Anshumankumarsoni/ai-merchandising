@@ -80,7 +80,7 @@ jobs:
         run: black --check apps services common config
 
       - name: Import order check with isort
-        run: isort --check-only apps services common config
+        run: isort --profile black --check-only apps services common config
 
       - name: Run migrations
         run: python manage.py migrate --noinput
